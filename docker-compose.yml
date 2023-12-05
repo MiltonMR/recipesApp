@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app_front_end:
+    build:
+      context: ./app_front_end
+      dockerfile: app_front_end.Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+
+  app_database:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: recipesAppDatabase
+    networks:
+      - app_network
+
+  app_back_end:
+    build:
+      context: ./app_back_end
+      dockerfile: app_back_end.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: app_database
+    networks:
+      - app_network
+
+networks:
+  app_network:
