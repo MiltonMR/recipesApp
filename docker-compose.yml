@@ -12,6 +12,7 @@ services:
 
   app_database:
     image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
     environment:
@@ -26,10 +27,9 @@ services:
       dockerfile: app_back_end.Dockerfile
     ports:
       - "8080:8080"
-    environment:
-      DATABASE_HOST: app_database
     networks:
       - app_network
+    command: ["dockerize", "-wait", "tcp://app_database:3306", "-timeout", "20s", "node", "server.js"]
 
 networks:
   app_network:
